@@ -1,5 +1,6 @@
 load("//rules:generate_srcjar.bzl", "generate_srcjar_kt")
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 filegroup(
     name = "real_sources",
@@ -10,6 +11,8 @@ generate_srcjar_kt(
     name = "generated_sources",
 )
 
+###
+# kt_jvm_library + java_binary do not provide info for the IDE
 kt_jvm_library(
     name = "example_lib",
     srcs = [
@@ -20,9 +23,22 @@ kt_jvm_library(
 
 java_binary(
     name = "example",
+    srcs = ["//com/example:generated_sources"],
     main_class = "com.kexample.MainKt",
     runtime_deps = [
         ":example_lib",
     ],
     deps = [],
+)
+
+###
+# kt_jvm_binary doesn't provide info for the IDE
+
+kt_jvm_binary(
+    name = "example_ktbin",
+    srcs = [
+        ":generated_sources",
+        ":real_sources",
+    ],
+    main_class = "com.kexample.MainKt",
 )

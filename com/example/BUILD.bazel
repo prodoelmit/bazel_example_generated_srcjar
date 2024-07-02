@@ -7,7 +7,11 @@ filegroup(
 
 generate_srcjar(
     name = "generated_sources",
+    visibility = ["//visibility:public"],
 )
+
+###
+# It works when java_binary directly depends on generated_sources
 
 java_binary(
     name = "example",
@@ -18,3 +22,20 @@ java_binary(
     main_class = "com.example.Main",
     deps = [],
 )
+
+###
+# It does not work when java_library depends on generated_sources and java_binary depends on java_library
+
+#java_library(
+#    name = "example_lib",
+#    srcs = [
+#        ":generated_sources",
+#        ":real_sources",
+#    ],
+#)
+#
+#java_binary(
+#    name = "example",
+#    main_class = "com.example.Main",
+#    runtime_deps = [":example_lib"],
+#)
