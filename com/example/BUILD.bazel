@@ -1,0 +1,20 @@
+load("//rules:generate_srcjar.bzl", "generate_srcjar")
+
+filegroup(
+    name = "real_sources",
+    srcs = ["Main.java"],
+)
+
+generate_srcjar(
+    name = "generated_sources",
+)
+
+java_binary(
+    name = "example",
+    srcs = [
+        ":generated_sources",
+        ":real_sources",
+    ],
+    main_class = "com.example.Main",
+    deps = [],
+)

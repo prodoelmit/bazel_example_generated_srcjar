@@ -1,0 +1,28 @@
+load("//rules:generate_srcjar.bzl", "generate_srcjar_kt")
+load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+
+filegroup(
+    name = "real_sources",
+    srcs = ["Main.kt"],
+)
+
+generate_srcjar_kt(
+    name = "generated_sources",
+)
+
+kt_jvm_library(
+    name = "example_lib",
+    srcs = [
+        ":generated_sources",
+        ":real_sources",
+    ],
+)
+
+java_binary(
+    name = "example",
+    main_class = "com.kexample.MainKt",
+    runtime_deps = [
+        ":example_lib",
+    ],
+    deps = [],
+)
