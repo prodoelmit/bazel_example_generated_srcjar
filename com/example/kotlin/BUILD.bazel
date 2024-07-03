@@ -1,6 +1,7 @@
 load("//rules:generate_srcjar.bzl", "generate_srcjar_kt")
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("//rules:fake_javainfo.bzl", "fake_javainfo")
 
 filegroup(
     name = "real_sources",
@@ -8,7 +9,14 @@ filegroup(
 )
 
 generate_srcjar_kt(
-    name = "generated_sources",
+    name = "generated_sources_kotlin",
+    class_name = "KotlinExample",
+    package = "com.example.kotlin",
+)
+
+fake_javainfo(
+    name = "fake_javainfo",
+    srcjar = ":generated_sources_kotlin",
 )
 
 ###
@@ -16,15 +24,15 @@ generate_srcjar_kt(
 kt_jvm_library(
     name = "example_lib",
     srcs = [
-        ":generated_sources",
+        ":generated_sources_kotlin",
         ":real_sources",
     ],
 )
 
 java_binary(
     name = "example",
-    srcs = ["//com/example:generated_sources"],
-    main_class = "com.kexample.MainKt",
+    srcs = [],
+    main_class = "com.example.kotlin.MainKt",
     runtime_deps = [
         ":example_lib",
     ],
@@ -37,8 +45,8 @@ java_binary(
 kt_jvm_binary(
     name = "example_ktbin",
     srcs = [
-        ":generated_sources",
+        ":generated_sources_kotlin",
         ":real_sources",
     ],
-    main_class = "com.kexample.MainKt",
+    main_class = "com.example.kotlin.MainKt",
 )

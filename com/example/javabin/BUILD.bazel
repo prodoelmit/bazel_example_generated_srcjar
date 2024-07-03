@@ -1,0 +1,23 @@
+load("//rules:generate_srcjar.bzl", "generate_srcjar_java")
+
+filegroup(
+    name = "real_sources",
+    srcs = ["Main.java"],
+)
+
+generate_srcjar_java(
+    name = "generated_sources_javabin",
+    class_name = "JavaBinExample",
+    package = "com.example.javabin",
+    visibility = ["//visibility:public"],
+)
+
+java_binary(
+    name = "example",
+    srcs = [
+        ":generated_sources_javabin",
+        ":real_sources",
+    ],
+    main_class = "com.example.javabin.Main",
+    deps = [],
+)

@@ -1,0 +1,30 @@
+load("//rules:generate_srcjar.bzl", "generate_srcjar_java")
+
+filegroup(
+    name = "real_sources",
+    srcs = ["Main.java"],
+)
+
+generate_srcjar_java(
+    name = "generated_sources_javalib",
+    class_name = "JavaLibExample",
+    package = "com.example.javalib",
+    visibility = ["//visibility:public"],
+)
+
+###
+# It does not work when java_library depends on generated_sources and java_binary depends on java_library
+
+java_library(
+    name = "lib",
+    srcs = [
+        ":generated_sources_javalib",
+        ":real_sources",
+    ],
+)
+
+java_binary(
+    name = "examplejavalib",
+    main_class = "com.example.javalib.Main",
+    runtime_deps = [":lib"],
+)
